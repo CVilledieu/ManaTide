@@ -4,33 +4,22 @@
 int HEIGHT =640;
 int WIDTH = 480;
 
-GLFWwindow* create_window(){
-    GLFWwindow* window;
-    
-        /* Initialize the library */
-        if (!glfwInit())
-            return NULL;
-    
-        /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(HEIGHT, WIDTH, "Hello World", NULL, NULL);
-        if (!window)
-        {
-            glfwTerminate();
-            return NULL;
-        }
-    
-        /* Make the window's context current */
-        glfwMakeContextCurrent(window);
-    
-        return window;
-}
 
 
 int main(void)
 {
     GLFWwindow* window;
+    /* Create a windowed mode window and its OpenGL context */
+    if (!glfwInit()) {return -1;}
+    window = glfwCreateWindow(HEIGHT, WIDTH, "Mana Tide",NULL, NULL);
 
-    window = create_window();
+    if(!window){
+        glfwTerminate();
+        return -1;
+    }
+
+    /* Make the window's context current */
+    glfwMakeContextCurrent(window);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -48,5 +37,4 @@ int main(void)
     glfwTerminate();
     return 0;
 }
-
 
