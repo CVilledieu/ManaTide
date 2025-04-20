@@ -1,46 +1,34 @@
 CC = gcc
 
-PROJECT := ManaTide
+INC_DIR = ./include
+LIB_DIR = ./lib
+OUT_DIR = ./build
+DEP_DIR = ./src/depend
+OBJ_DIR = $(OUT_DIR)/obj
+LIBS = -lopengl32 -lglfw3
 
-INCLUDES := -I ./include
-CFLAGS := -Wall -D GLFW_DLL $(INCLUDES)
+_DEP = $(DEP_DIR)/glad.c
+SRC = src/main.c
+_OBJ = glad.o main.o
+OBJ = $(patsubst %,$(OBJ_DIR)/%,$(_OBJ))
 
-LIB_DIR := ./lib
-LIBRARIES := $(LIB_DIR) $(patsubst $(LIB_DIR)/lib%.a,-l%,$(wildcard $(LIB_DIR)/*.a)) -lopengl32
-LDFLAGS := -L$(LIBRARIES)
+CFLAGS = -I$(INC_DIR) -Wall -D GLFW_DLL
 
-SRC_DIR := src/
-SRC = $(SRC_DIR)main.c
+all: app clean
+# Rule to compile glad.c into glad.o
+$(OBJ_DIR)/glad.o: $(DEP_DIR)/glad.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) -c $< -o $@ $(CFLAGS)
 
-DEPEND_DIR = depend/
+# Rule to compile main.c into main.o
+$(OBJ_DIR)/main.o: $(SRC)
+	@mkdir -p $(OBJ_DIR)
+	$(CC) -c $< -o $@ $(CFLAGS)
 
-PROJECT_DIR = $(SRC_DIR) $(DEPEND_DIR)
+app: $(OBJ)
+	$(CC) -o $(OUT_DIR)/$@ $^ $(CFLAGS) $(LIBS)
 
-SRC_FILES = $(shell find $(PROJECT_DIR) -type f -name "\*.c")
-OBJ_FILES := $(patsubst %.c,%.o,$(SRC_FILES))
-DEP_FILES := $(patsubst %.c,%.d,$(SRC_FILES))
-
-OUTPUT_DIR = build/
-MAIN = -o $(OUTPUT_DIR)app
-
-.PHONY: all clean
-
-all: $(PROJECT)
+.PHONY: clean
 
 clean:
-	-@$(RM) $(wildcard $(OBJ_FILES) $(DEP_FILES) $(PROJECT))
-
-
--include $(DEP_FILES)
-
-$(PROJECT): $(OBJ_FILES)
-	@$(CC) $(LDFLAGS) $^
-
-%.o: %.c Makefile
-	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
-
-#APP: ./src/main.c ./depend/glad.c
-#	$(CC) $(SRC) $(MAIN) $(CFLAGS) $(LDFLAGS)
-
-
-
+	rm -rf $(OBJ_DIR) 
