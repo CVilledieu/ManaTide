@@ -1,6 +1,6 @@
 CC = gcc
 
-INC_DIR = ./include
+INC_DIR = ./include ./src/depend/shaders/
 LIB_DIR = ./lib
 OUT_DIR = ./build
 DEP_DIR = ./src/depend
@@ -9,12 +9,19 @@ LIBS = -lopengl32 -lglfw3
 
 _DEP = $(DEP_DIR)/glad.c
 SRC = src/main.c
-_OBJ = glad.o main.o
+_OBJ = shaders.o glad.o main.o
 OBJ = $(patsubst %,$(OBJ_DIR)/%,$(_OBJ))
 
-CFLAGS = -I$(INC_DIR) -Wall -D GLFW_DLL
 
-all: app clean
+
+CFLAGS = $(addprefix -I,$(INC_DIR)) -Wall -D GLFW_DLL
+
+all: cleanExe app clean
+
+$(OBJ_DIR)/shaders.o: $(DEP_DIR)/shaders/BasicShade.c
+	@mkdir -p $(OBJ_DIR)
+	$(CC) -c $< -o $@ $(CFLAGS)
+
 # Rule to compile glad.c into glad.o
 $(OBJ_DIR)/glad.o: $(DEP_DIR)/glad.c
 	@mkdir -p $(OBJ_DIR)
@@ -32,3 +39,7 @@ app: $(OBJ)
 
 clean:
 	rm -rf $(OBJ_DIR) 
+
+cleanExe:
+	rm -rf $(OUT_DIR)/app.exe
+	@echo "Removed previous exe"
