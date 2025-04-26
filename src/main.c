@@ -1,8 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "depend/shaders/BasicShade.h"
+#include <projHeaders/BasicShade.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 
 
 //Size of window
@@ -37,16 +38,6 @@ int main(void)
         printf("Shader Program Obj failed to be created");
         return -1;
     }
-   //(x,y,z) cords for a triangle
-    //range for each point/vertex is -1 to 1
-    //standard xyz-plane
-    //ex: (0,1) is up (0,-1) is down and (1,0) is right
-    /*
-    float triangleVertices[] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f, 0.5f, 0.0f,
-    };*/
 
     float vertices[] = {
          0.5f,  0.5f, 0.0f,
@@ -54,6 +45,7 @@ int main(void)
         -0.5f, -0.5f, 0.0f, 
         -0.5f,  0.5f, 0.0f
     };
+
 
     //The order the vertices will be drawn
     unsigned int drawIndexes[] = { 
@@ -98,6 +90,7 @@ int main(void)
     glEnableVertexAttribArray(0);
 
     glBindBuffer(GL_ARRAY_BUFFER,0);
+    //unbind vao
     glBindVertexArray(0);
     //All shader and render calls after this will use the object created by createProgramShaderObj()
     //Called within render loop to draw object
@@ -120,6 +113,7 @@ int main(void)
         glBindVertexArray(VAO);
         //glDrawArrays(GL_TRIANGLES, 0,3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,0);
+        
 
 
         /* Swap front and back buffers */

@@ -1,6 +1,6 @@
 CC = gcc
 
-INC_DIR = ./include ./src/depend/shaders/
+INC_DIR = ./include
 LIB_DIR = ./lib
 OUT_DIR = ./build
 DEP_DIR = ./src/depend
